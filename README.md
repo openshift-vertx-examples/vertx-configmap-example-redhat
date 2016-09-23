@@ -55,21 +55,13 @@ metadata:
 * Launch minishift
 
 ```
-minishift delete
 minishift start --deploy-registry=true --deploy-router=true --memory=4048 --vm-driver="xhyve"
-minishift docker-env
 eval $(minishift docker-env)
 ```
-
-* Setup the Kubernetes ENV variable required on your machine 
-
-```
-export KUBERNETES_MASTER=https://$(minishift ip):8443
-``` 
    
 * Log on to openshift
 ```    
-oc login $(minishift ip):8443 -u admin -p admin
+oc login $(minishift ip):8443 -u admin -p admin -n default
 ```    
 # Create a new project
 
@@ -161,7 +153,7 @@ curl -X PUT $service/products/prod1122 -d @src/main/resources/prod1122.json
 # Get the log of the Container 
 
 ```
-bin/oc-log simple-config-map
+bin/oc-log.sh simple-config-map
 ```
 
 # Update the port number
@@ -185,7 +177,7 @@ oc edit configmap/app-config
 Next, we will check the log of the pod to verify that the modification has been propagated to the listener of Vertx.
 
 ```
-bin/oc-log simple-config-map
+bin/oc-log.sh simple-config-map
 ... 
 New configuration: {
   "logging" : "debug",
@@ -234,6 +226,39 @@ curl $service/products
 }, 
 ...
 ```
+# Steps to execute to play with the demo
+
+```
+eval $(minishift docker-env)
+oc login $(minishift ip):8443 -u admin -p admin -n default
+oc delete project vertx-demo
+oc new-project vertx-demo
+oc policy add-role-to-user view openshift-dev -n vertx-demo
+oc policy add-role-to-group view system:serviceaccounts -n vertx-demo
+oc delete configmap/app-config
+oc create configmap app-config --from-file=src/main/resources/app.json
+
+docker rmi -f vertx-demo/simple-config-map:1.0.0-SNAPSHOT
+
+mvn -Popenshift
+
+export service=$(minishift service simple-vertx-configmap -n vertx-demo --url=true)
+
+curl $service/products
+curl $service/products/prod7340
+curl -X PUT $service/products/prod1122 -d @src/main/resources/prod1122.json
+
+bin/oc-log.sh simple-config-map
+
+oc edit configmap/app-config
+
+bin/oc-log.sh simple-config-map
+
+oc edit service/simple-vertx-configmap
+
+export service=$(minishift service simple-vertx-configmap -n vertx-demo --url=true)
+curl $service/products
+```
 
 # Troubleshooting
 
@@ -246,28 +271,5 @@ oc delete service simple-vertx-configmap
 oc delete rc simple-config-map
 
 oc edit configmap/app-config
-```
-
-## Not used
-
-```
-oc create configmap game-config --from-file=src/main/resources/game.properties
-oc create configmap ui-config --from-file=src/main/resources/ui.json
-
-oc get configmap/game-config -o yaml
-oc get configmap/ui-config -o yaml
-
-oc delete configmap/game-config
-oc delete configmap/ui-config
-
-Json
-oc create configmap game-config --from-file=src/main/resources/game.json
-oc create configmap ui-config --from-file=src/main/resources/ui.json
-oc create configmap app-config --from-file=src/main/resources/app.json
-
-Properties
-oc create configmap game-config --from-file=src/main/resources/game.properties
-oc create configmap ui-config --from-file=src/main/resources/ui.properties
-oc create configmap app-config --from-file=src/main/resources/app.properties
 ```
 
