@@ -231,10 +231,13 @@ curl $service/products
 ```
 eval $(minishift docker-env)
 oc login $(minishift ip):8443 -u admin -p admin -n default
+
 oc delete project vertx-demo
 oc new-project vertx-demo
+
 oc policy add-role-to-user view openshift-dev -n vertx-demo
 oc policy add-role-to-group view system:serviceaccounts -n vertx-demo
+
 oc delete configmap/app-config
 oc create configmap app-config --from-file=src/main/resources/app.json
 
@@ -244,12 +247,13 @@ mvn -Popenshift
 
 export service=$(minishift service simple-vertx-configmap -n vertx-demo --url=true)
 
-curl $service/products
-curl $service/products/prod7340
-curl -X PUT $service/products/prod1122 -d @src/main/resources/prod1122.json
+http $service/products
+http $service/products/prod7340
+http -X PUT $service/products/prod1122 -d @src/main/resources/prod1122.json
 
 bin/oc-log.sh simple-config-map
 
+oc get configmap/app-config -o yaml
 oc edit configmap/app-config
 
 bin/oc-log.sh simple-config-map
@@ -257,7 +261,7 @@ bin/oc-log.sh simple-config-map
 oc edit service/simple-vertx-configmap
 
 export service=$(minishift service simple-vertx-configmap -n vertx-demo --url=true)
-curl $service/products
+http $service/products
 ```
 
 # Troubleshooting
