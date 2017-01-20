@@ -21,8 +21,8 @@ import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.example.util.Runner;
-import io.vertx.ext.configuration.ConfigurationService;
-import io.vertx.ext.configuration.ConfigurationServiceOptions;
+import io.vertx.ext.configuration.ConfigurationRetriever;
+import io.vertx.ext.configuration.ConfigurationRetrieverOptions;
 import io.vertx.ext.configuration.ConfigurationStoreOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -46,7 +46,7 @@ public class SimpleRest extends AbstractVerticle {
     }
 
     private Map<String, JsonObject> products = new HashMap<>();
-    private ConfigurationService conf;
+    private ConfigurationRetriever conf;
     private HttpServer httpServer;
 
     @Override public void start() {
@@ -74,9 +74,9 @@ public class SimpleRest extends AbstractVerticle {
         });
 
         conf.listen((newConf -> {
-            LOG.info("New configuration: " + newConf.encodePrettily());
+            LOG.info("New configuration: " + newConf.toJson().encodePrettily());
 
-            int port = newConf.getInteger("port", 8080);
+            int port = newConf.toJson().getInteger("port", 8080);
             LOG.info("Port has changed: " + port);
 
             httpServer.close();
@@ -145,7 +145,7 @@ public class SimpleRest extends AbstractVerticle {
                         .put("name", "app-config")
                         .put("key","app.json"));
 
-        conf = ConfigurationService.create(vertx, new ConfigurationServiceOptions()
+        conf = ConfigurationRetriever.create(vertx, new ConfigurationRetrieverOptions()
                 .addStore(appStore));
     }
 

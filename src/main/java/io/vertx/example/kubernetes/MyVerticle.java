@@ -2,8 +2,8 @@ package io.vertx.example.kubernetes;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.configuration.ConfigurationService;
-import io.vertx.ext.configuration.ConfigurationServiceOptions;
+import io.vertx.ext.configuration.ConfigurationRetriever;
+import io.vertx.ext.configuration.ConfigurationRetrieverOptions;
 import io.vertx.ext.configuration.ConfigurationStoreOptions;
 
 public class MyVerticle extends AbstractVerticle {
@@ -33,7 +33,7 @@ public class MyVerticle extends AbstractVerticle {
                         .put("namespace", "vertx-demo")
                         .put("name", "app-config"));
 
-        ConfigurationService conf = ConfigurationService.create(vertx, new ConfigurationServiceOptions()
+        ConfigurationRetriever conf = ConfigurationRetriever.create(vertx, new ConfigurationRetrieverOptions()
                 .addStore(gameStore).addStore(uiStore).addStore(appStore));
 
         conf.getConfiguration(ar -> {
@@ -45,7 +45,7 @@ public class MyVerticle extends AbstractVerticle {
         });
 
         conf.listen(newConfiguration -> {
-            System.out.println("New configuration: " + newConfiguration.encodePrettily());
+            System.out.println("New configuration: " + newConfiguration.toJson().encodePrettily());
         });
     }
 
