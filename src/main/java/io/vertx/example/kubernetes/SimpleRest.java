@@ -73,16 +73,21 @@ public class SimpleRest extends AbstractVerticle {
             }
         });
 
-        conf.listen((newConf -> {
-            LOG.info("New configuration: " + newConf.toJson().encodePrettily());
+        conf.listen((configuration -> {
+            LOG.info("Configuration change: " + configuration.toJson().encodePrettily());
 
-            int port = newConf.toJson().getInteger("port", 8080);
+            JsonObject newConfiguration = configuration.getNewConfiguration();
+            int port = newConfiguration.getInteger("port", 8080);
             LOG.info("Port has changed: " + port);
 
-            httpServer.close();
-
-            LOG.info("The HttpServer will be stopped and restarted.");
-            httpServer.requestHandler(router::accept).listen(port);
+            httpServer.close(event -> {
+                if (event.succeeded()) {
+                    LOG.info("The HttpServer will be stopped and restarted.");
+                    httpServer.requestHandler(router::accept).listen(port);
+                } else {
+                    event.cause().printStackTrace();
+                }
+            });
         }));
 
     }
