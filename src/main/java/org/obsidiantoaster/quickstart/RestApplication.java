@@ -19,9 +19,8 @@ package org.obsidiantoaster.quickstart;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
-import io.vertx.example.util.Runner;
-import io.vertx.ext.configuration.ConfigurationRetriever;
-import io.vertx.ext.configuration.ConfigurationRetrieverOptions;
+import io.vertx.ext.configuration.ConfigurationService;
+import io.vertx.ext.configuration.ConfigurationServiceOptions;
 import io.vertx.ext.configuration.ConfigurationStoreOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -37,12 +36,7 @@ public class RestApplication extends AbstractVerticle {
     private static final Logger LOG = LoggerFactory.getLogger(RestApplication.class);
     public static final String DEFAULT_TEMPLATE = "Hello, %s!";
 
-    // Convenience method so you can run it in your IDE
-    public static void main(String[] args) {
-        Runner.runExample(RestApplication.class);
-    }
-
-    private ConfigurationRetriever conf;
+    private ConfigurationService conf;
     private String template;
     private long counter;
 
@@ -101,7 +95,7 @@ public class RestApplication extends AbstractVerticle {
                         .put("name", "app-config")
                         .put("key", "app.json"));
 
-        conf = ConfigurationRetriever.create(vertx, new ConfigurationRetrieverOptions()
+        conf = ConfigurationService.create(vertx, new ConfigurationServiceOptions()
                 .addStore(appStore));
     }
 }

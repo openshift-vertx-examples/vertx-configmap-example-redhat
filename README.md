@@ -1,4 +1,4 @@
-# Quickstart - Vert.x - Kubernetes Config Map
+# Instructions
 
 Quickstart where the Vert.x container retrieves the Application parameters using a Kubernetes ConfigMap. 
 For this quickstart, we will instantiate a Vertx HTTP Server where the port number has been defined using a Kubernetes configMap using this name `app-config`. 
@@ -24,53 +24,77 @@ data:
     }
 kind: ConfigMap
 metadata:
-  creationTimestamp: 2016-09-14T12:13:08Z
   name: app-config
-  namespace: vertx-demo
-  resourceVersion: "6232"
-  selfLink: /api/v1/namespaces/vertx-demo/configmaps/app-config
-  uid: 990dd236-7a74-11e6-8d26-868f517b6834
 ```
 
+# Prerequisites
 
-# Instructions
+To get started with these quickstarts you'll need the following prerequisites:
 
-* Launch minishift
+Name | Description | Version
+--- | --- | ---
+[java][1] | Java JDK | 8
+[maven][2] | Apache Maven | 3.2.x 
+[oc][3] | OpenShift Client | v3.3.x
+[git][4] | Git version management | 2.x 
 
-```
-minishift start --deploy-registry=true --deploy-router=true --memory=4048 --vm-driver="xhyve"
-eval $(minishift docker-env)
-```
-   
-* Log on to openshift
-```    
-oc login $(minishift ip):8443 -u admin -p admin -n default
-```    
-# Create a new project
+[1]: http://www.oracle.com/technetwork/java/javase/downloads/
+[2]: https://maven.apache.org/download.cgi?Preferred=ftp://mirror.reverse.net/pub/apache/
+[3]: https://docs.openshift.com/enterprise/3.2/cli_reference/get_started_cli.html
+[4]: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 
-```    
-oc new-project vertx-demo
-oc policy add-role-to-user view openshift-dev -n vertx-demo
-oc policy add-role-to-group view system:serviceaccounts -n vertx-demo
-```
+In order to build and deploy this project, you must have an account on an OpenShift Online (OSO): https://console.dev-preview-int.openshift.com/ instance.
 
-# Create the ConfigMap
 
-```
-oc create configmap app-config --from-file=src/main/resources/app.json
-```
+# Build the Project
 
-# To consult the configMap (optional)
+1. Execute the following apache maven command:
 
-```
-oc get configmap/app-config -o yaml
+```bash
+mvn clean package
 ```
 
-* Build and deploy the project
-   
-```
-mvn -Popenshift   
-```
+# OpenShift Online
+
+1. Go to [OpenShift Online](https://console.dev-preview-int.openshift.com/console/command-line) to get the token used by the oc client for authentication and project access. 
+
+1. On the oc client, execute the following command to replace MYTOKEN with the one from the Web Console:
+
+    ```
+    oc login https://api.dev-preview-int.openshift.com --token=MYTOKEN
+    ```
+1. To allow the Spring Boot application running as a pod to access the Kubernetes Api to retrieve the Config Map associated to the application name of the project `springboot-rest-configmap`, 
+   the view role must be assigned to the default service account in the current project:
+
+    ```
+    oc policy add-role-to-user view system:serviceaccount:$(oc project -q):default -n $(oc project -q)
+    ```    
+1. Use the Fabric8 Maven Plugin to launch the S2I process on the OpenShift Online machine & start the pod.
+
+    ```
+    mvn clean package fabric8:deploy -Popenshift  -DskipTests
+    ```
+    
+1. Get the route url.
+
+    ```
+    oc get route/springboot-rest-configmap
+    NAME              HOST/PORT                                          PATH      SERVICE                TERMINATION   LABELS
+    springboot-rest   <HOST_PORT_ADDRESS>             springboot-rest:8080
+    ```
+
+1. Use the Host or Port address to access the REST endpoint.
+    ```
+    http http://<HOST_PORT_ADDRESS>/greeting
+    http http://<HOST_PORT_ADDRESS>/greeting name==Bruno
+
+    or 
+
+    curl http://<HOST_PORT_ADDRESS>/greeting
+    curl http://<HOST_PORT_ADDRESS>/greeting name==Bruno
+    ```
+1. Validate that you get the message `Hello, World from Kubernetes ConfigMap !` as call's response from the REST endpoint   
+
 
 # Consult the Service deployed 
 
