@@ -63,7 +63,7 @@ mvn clean package
     ```
     oc login https://api.dev-preview-int.openshift.com --token=MYTOKEN
     ```
-1. To allow the Spring Boot application running as a pod to access the Kubernetes Api to retrieve the Config Map associated to the application name of the project `vertx-rest-configmap`, 
+1. To allow the Vert.x application running as a pod to access the Kubernetes Api to retrieve the Config Map associated to the application name of the project `vertx-rest-configmap`, 
    the view role must be assigned to the default service account in the current project:
 
     ```
