@@ -63,7 +63,7 @@ mvn clean package
     ```
     oc login https://api.dev-preview-int.openshift.com --token=MYTOKEN
     ```
-1. To allow the Spring Boot application running as a pod to access the Kubernetes Api to retrieve the Config Map associated to the application name of the project `springboot-rest-configmap`, 
+1. To allow the Spring Boot application running as a pod to access the Kubernetes Api to retrieve the Config Map associated to the application name of the project `vertx-rest-configmap`, 
    the view role must be assigned to the default service account in the current project:
 
     ```
@@ -78,9 +78,9 @@ mvn clean package
 1. Get the route url.
 
     ```
-    oc get route/springboot-rest-configmap
+    oc get route/vertx-configmap-rest
     NAME              HOST/PORT                                          PATH      SERVICE                TERMINATION   LABELS
-    springboot-rest   <HOST_PORT_ADDRESS>             springboot-rest:8080
+    vertx-configmap-rest   <HOST_PORT_ADDRESS>             vertx-configmap-rest:8080
     ```
 
 1. Use the Host or Port address to access the REST endpoint.
@@ -93,87 +93,4 @@ mvn clean package
     curl http://<HOST_PORT_ADDRESS>/greeting
     curl http://<HOST_PORT_ADDRESS>/greeting name==Bruno
     ```
-1. Validate that you get the message `Hello, World from Kubernetes ConfigMap !` as call's response from the REST endpoint   
-
-
-# Consult the Service deployed 
-
-First, we must retrieve the IP Address of the service exposed by the OpenShift Router to our host machine
-
-```
-export service=$(minishift service simple-vertx-configmap -n vertx-demo --url=true)
-```
-
-Next, we can use curl to perform a greeting from the REST service
-
-```
-curl $service/greeting
-
-#example output
-{"id":2,"content":"From config ==> Hello World"}% 
-```
-
-# Get the log of the Container 
-
-```
-bin/oc-log.sh simple-config-map
-```
-
-# Update the template
-
-The Vertx Configuration Service provides a listener which can be informed if a config parameter of the ConfigMap has changed.
-The listener checks every 5s if such a modification occurred. 
-
-```java
-conf.listen((configuration -> {
-    LOG.info("Configuration change: " + configuration.toJson().encodePrettily());
-
-    JsonObject newConfiguration = configuration.getNewConfiguration();
-    template = newConfiguration.getString("template", DEFAULT_TEMPLATE);
-    LOG.info("Template has changed: " + template);
-}));
-```
-
-To test this feature, you will edit first the configMap and change the message template from the value `From config ==> Hello %s!` to `How are you %s?`. 
-
-```
-oc edit configmap/app-config
-```
-
-Next, we will check the log of the pod to verify that the modification has been propagated to the listener of Vertx.
-
-```
-bin/oc-log.sh simple-config-map
-... 
-"newConfiguration" : {
-    "template" : "How are you %s?"
-  },
-  "previousConfiguration" : {
-    "template" : "From config ==> Hello %s!"
-  }
-
-2017-01-20 13:36:28 INFO  RestApplication:80 - Template has changed: How are you %s?  
-```
-
-If the log reports that the template is now `How are you %s?`, then we can call the service again.
-
-```
-curl $service/greeting
-
-#example output:
-{"id":3,"content":"How are you World?"}%
-```
-
-# Troubleshooting
-
-## Delete Replication controller, service, ConfigMap
-
-```
-oc delete configmap/app-config
-
-oc delete service simple-vertx-configmap
-oc delete rc simple-config-map
-
-oc edit configmap/app-config
-```
-
+1. Validate that you get the message `Hello, World from Kubernetes ConfigMap !` as call's response from the REST endpoint
