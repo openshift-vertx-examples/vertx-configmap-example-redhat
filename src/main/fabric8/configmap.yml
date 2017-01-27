@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: ${project.artifactId}
 data:
-  application.properties: |
+  app.json: |
     message: Hello, %s from Kubernetes ConfigMap !

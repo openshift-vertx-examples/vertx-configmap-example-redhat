@@ -37,7 +37,7 @@ public class RestApplication extends AbstractVerticle {
     public static final String DEFAULT_TEMPLATE = "Hello, %s!";
 
     private ConfigurationService conf;
-    private String template;
+    private String message;
     private long counter;
 
 
@@ -59,22 +59,13 @@ public class RestApplication extends AbstractVerticle {
 
         conf.getConfiguration(ar -> {
             if (ar.succeeded()) {
-                template = ar.result().getString("template", DEFAULT_TEMPLATE);
-                LOG.info("ConfigMap -> tempate : " + template);
+                message = ar.result().getString("message", DEFAULT_TEMPLATE);
+                LOG.info("ConfigMap -> message : " + message);
             } else {
-                template = DEFAULT_TEMPLATE;
+                message = DEFAULT_TEMPLATE;
                 ar.cause().printStackTrace();
             }
         });
-
-        conf.listen((configuration -> {
-            LOG.info("Configuration change: " + configuration.toJson().encodePrettily());
-
-            JsonObject newConfiguration = configuration.getNewConfiguration();
-            template = newConfiguration.getString("template", DEFAULT_TEMPLATE);
-            LOG.info("Template has changed: " + template);
-        }));
-
     }
 
     private void greeting(RoutingContext context) {
@@ -84,15 +75,15 @@ public class RestApplication extends AbstractVerticle {
         }
         context.response()
                 .putHeader(CONTENT_TYPE, "application/json; charset=utf-8")
-                .end(Json.encode(new Greeting(++counter, String.format(template, name))));
+                .end(Json.encode(new Greeting(++counter, String.format(message, name))));
     }
 
     private void setUpConfiguration() {
         ConfigurationStoreOptions appStore = new ConfigurationStoreOptions();
         appStore.setType("configmap")
                 .setConfig(new JsonObject()
-                        .put("namespace", "vertx-demo")
-                        .put("name", "app-config")
+                        //.put("namespace", "vertx-demo")
+                        .put("name", "vertx-configmap-rest")
                         .put("key", "app.json"));
 
         conf = ConfigurationService.create(vertx, new ConfigurationServiceOptions()
