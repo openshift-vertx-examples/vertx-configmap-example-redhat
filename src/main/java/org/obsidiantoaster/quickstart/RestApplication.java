@@ -83,7 +83,7 @@ public class RestApplication extends AbstractVerticle {
         appStore.setType("configmap")
                 .setFormat("properties")
                 .setConfig(new JsonObject()
-                        .put("name", "vertx-configmap-rest")
+                        .put("name", "vertx-rest-configmap")
                         .put("key", "app.json"));
 
         conf = ConfigurationService.create(vertx, new ConfigurationServiceOptions()

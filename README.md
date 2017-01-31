@@ -79,9 +79,9 @@ mvn clean package
 1. Get the route url.
 
     ```
-    oc get route/vertx-configmap-rest
+    oc get route/vertx-rest-configmap
     NAME                  HOST/PORT               PATH    SERVICE                PORT      TERMINATION  
-    vertx-configmap-rest  <HOST_PORT_ADDRESS>             vertx-configmap-rest   8080
+    vertx-rest-configmap  <HOST_PORT_ADDRESS>             vertx-rest-configmap   8080
     ```
 
 1. Use the Host or Port address to access the REST endpoint.
