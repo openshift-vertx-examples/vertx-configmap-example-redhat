@@ -1,0 +1,10 @@
+{
+  "apiVersion": "v1",
+  "kind": "ConfigMap",
+  "metadata": {
+    "name": "vertx-configmap-rest"
+  },
+  "data": {
+    "app.json": "message: Hello, %s from Kubernetes ConfigMap !"
+  }
+}
