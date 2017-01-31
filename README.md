@@ -68,6 +68,7 @@ mvn clean package
 
     ```
     oc policy add-role-to-user view system:serviceaccount:$(oc project -q):default -n $(oc project -q)
+    oc policy add-role-to-group view system:serviceaccount -n $(oc project -q)
     ```    
 1. Use the Fabric8 Maven Plugin to launch the S2I process on the OpenShift Online machine & start the pod.
 
