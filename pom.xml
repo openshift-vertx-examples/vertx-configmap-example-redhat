@@ -36,13 +36,13 @@
     <java.version>1.8</java.version>
 
     <fabric8.version>2.2.176</fabric8.version>
-    <vertx-version>3.3.3</vertx-version>
+    <vertx.version>3.4.0.Beta1</vertx.version>
     <slf4j.version>1.7.21</slf4j.version>
 
     <fabric8.maven.plugin.version>3.1.92</fabric8.maven.plugin.version>
     <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>2.19.1</maven-failsafe-plugin.version>
-    <vertx-maven-plugin.version>1.0.2</vertx-maven-plugin.version>
+    <vertx-maven-plugin.version>1.0.4</vertx-maven-plugin.version>
 
     <vertx.verticle>org.obsidiantoaster.quickstart.RestApplication</vertx.verticle>
   </properties>
@@ -59,7 +59,7 @@
       <dependency>
         <groupId>io.vertx</groupId>
         <artifactId>vertx-stack-depchain</artifactId>
-        <version>${vertx-version}</version>
+        <version>${vertx.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -82,14 +82,14 @@
 
     <!-- Vertx Configuration Service -->
     <dependency>
-      <groupId>me.escoffier.vertx</groupId>
-      <artifactId>vertx-configuration</artifactId>
-      <version>0.1.0</version>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-config</artifactId>
+      <version>${vertx.version}</version>
     </dependency>
     <dependency>
-      <groupId>me.escoffier.vertx</groupId>
-      <artifactId>vertx-configuration-kubernetes-configmap</artifactId>
-      <version>0.1.0</version>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-config-kubernetes-configmap</artifactId>
+      <version>${vertx.version}</version>
     </dependency>
   </dependencies>
 

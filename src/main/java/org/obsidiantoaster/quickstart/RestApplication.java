@@ -16,18 +16,19 @@
  */
 package org.obsidiantoaster.quickstart;
 
+import io.vertx.config.ConfigRetriever;
+import io.vertx.config.ConfigRetrieverOptions;
+import io.vertx.config.ConfigStoreOptions;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
-import io.vertx.ext.configuration.ConfigurationService;
-import io.vertx.ext.configuration.ConfigurationServiceOptions;
-import io.vertx.ext.configuration.ConfigurationStoreOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
+
 /**
  *
  */
@@ -36,7 +37,7 @@ public class RestApplication extends AbstractVerticle {
     private static final Logger LOG = LoggerFactory.getLogger(RestApplication.class);
     public static final String DEFAULT_TEMPLATE = "Hello, %s!";
 
-    private ConfigurationService conf;
+    private ConfigRetriever conf;
     private String message;
     private long counter;
 
@@ -50,14 +51,14 @@ public class RestApplication extends AbstractVerticle {
 
         // Create the HTTP server and pass the "accept" method to the request handler.
         vertx
-                .createHttpServer()
-                .requestHandler(router::accept)
-                .listen(
-                        // Retrieve the port from the configuration,
-                        // default to 8080.
-                        config().getInteger("http.port", 8080));
+            .createHttpServer()
+            .requestHandler(router::accept)
+            .listen(
+                // Retrieve the port from the configuration,
+                // default to 8080.
+                config().getInteger("http.port", 8080));
 
-        conf.getConfiguration(ar -> {
+        conf.getConfig(ar -> {
             if (ar.succeeded()) {
                 message = ar.result().getString("message", DEFAULT_TEMPLATE);
                 LOG.info("ConfigMap -> message : " + message);
@@ -74,19 +75,19 @@ public class RestApplication extends AbstractVerticle {
             name = "World";
         }
         context.response()
-                .putHeader(CONTENT_TYPE, "application/json; charset=utf-8")
-                .end(Json.encode(new Greeting(++counter, String.format(message, name))));
+            .putHeader(CONTENT_TYPE, "application/json; charset=utf-8")
+            .end(Json.encode(new Greeting(++counter, String.format(message, name))));
     }
 
     private void setUpConfiguration() {
-        ConfigurationStoreOptions appStore = new ConfigurationStoreOptions();
+        ConfigStoreOptions appStore = new ConfigStoreOptions();
         appStore.setType("configmap")
-                .setFormat("properties")
-                .setConfig(new JsonObject()
-                        .put("name", "vertx-rest-configmap")
-                        .put("key", "app.json"));
+            .setFormat("properties")
+            .setConfig(new JsonObject()
+                .put("name", "vertx-rest-configmap")
+                .put("key", "app.json"));
 
-        conf = ConfigurationService.create(vertx, new ConfigurationServiceOptions()
-                .addStore(appStore));
+        conf = ConfigRetriever.create(vertx, new ConfigRetrieverOptions()
+            .addStore(appStore));
     }
 }
