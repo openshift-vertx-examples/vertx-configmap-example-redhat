@@ -20,12 +20,11 @@ import io.vertx.config.ConfigRetriever;
 import io.vertx.config.ConfigRetrieverOptions;
 import io.vertx.config.ConfigStoreOptions;
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Future;
 import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
 
@@ -34,13 +33,11 @@ import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
  */
 public class RestApplication extends AbstractVerticle {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RestApplication.class);
     public static final String DEFAULT_TEMPLATE = "Hello, %s!";
 
     private ConfigRetriever conf;
     private String message;
     private long counter;
-
 
     @Override
     public void start() {
@@ -49,23 +46,23 @@ public class RestApplication extends AbstractVerticle {
         Router router = Router.router(vertx);
         router.get("/greeting").handler(this::greeting);
 
-        // Create the HTTP server and pass the "accept" method to the request handler.
-        vertx
-            .createHttpServer()
-            .requestHandler(router::accept)
-            .listen(
-                // Retrieve the port from the configuration,
-                // default to 8080.
-                config().getInteger("http.port", 8080));
+        retrieveMessageTemplateFromConfiguration()
+            .setHandler(ar -> {
+                // Once retrieved, store it and start the HTTP server.
+                message = ar.result();
+                vertx
+                    .createHttpServer()
+                    .requestHandler(router::accept)
+                    .listen(
+                        // Retrieve the port from the configuration,
+                        // default to 8080.
+                        config().getInteger("http.port", 8080));
 
-        conf.getConfig(ar -> {
-            if (ar.succeeded()) {
-                message = ar.result().getString("message", DEFAULT_TEMPLATE);
-                LOG.info("ConfigMap -> message : " + message);
-            } else {
-                message = DEFAULT_TEMPLATE;
-                ar.cause().printStackTrace();
-            }
+            });
+
+        conf.listen(change -> {
+            System.out.println("New configuration retrieved: " + change.getNewConfiguration().getString("message"));
+            message = change.getNewConfiguration().getString("message", DEFAULT_TEMPLATE);
         });
     }
 
@@ -77,6 +74,15 @@ public class RestApplication extends AbstractVerticle {
         context.response()
             .putHeader(CONTENT_TYPE, "application/json; charset=utf-8")
             .end(Json.encode(new Greeting(++counter, String.format(message, name))));
+    }
+
+    private Future<String> retrieveMessageTemplateFromConfiguration() {
+        Future<String> future = Future.future();
+        conf.getConfig(ar ->
+            future.handle(ar
+                .map(json -> json.getString("message", DEFAULT_TEMPLATE))
+                .otherwise(t -> DEFAULT_TEMPLATE)));
+        return future;
     }
 
     private void setUpConfiguration() {

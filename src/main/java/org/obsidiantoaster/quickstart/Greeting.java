@@ -18,8 +18,8 @@ package org.obsidiantoaster.quickstart;
 
 public class Greeting {
 
-    private final long id;
-    private final String content;
+    private long id;
+    private String content;
 
     public Greeting() {
         this.id = 0;
@@ -29,6 +29,16 @@ public class Greeting {
     public Greeting(long id, String content) {
         this.id = id;
         this.content = content;
+    }
+
+    public Greeting setId(long id) {
+        this.id = id;
+        return this;
+    }
+
+    public Greeting setContent(String content) {
+        this.content = content;
+        return this;
     }
 
     public long getId() {
