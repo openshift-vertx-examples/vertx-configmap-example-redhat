@@ -2,6 +2,7 @@ package org.obsidiantoaster.quickstart;
 
 import com.jayway.restassured.response.Response;
 import io.fabric8.kubernetes.api.model.ConfigMap;
+import io.vertx.core.json.JsonObject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -55,7 +56,7 @@ public class OpenShiftIT {
         assertThat(map).isNotNull();
 
         assistant.client().configMaps().withName("vertx-rest-configmap").edit()
-            .addToData("app.json", "message: Bonjour, %s from Kubernetes ConfigMap !")
+            .addToData("app.json", new JsonObject().put("message", "Bonjour, %s from Kubernetes ConfigMap !").encode())
             .done();
 
         await().atMost(5, TimeUnit.MINUTES).catchUncaughtExceptions().until(() -> {
