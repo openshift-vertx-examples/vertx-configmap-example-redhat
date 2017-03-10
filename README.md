@@ -5,10 +5,10 @@ For this quickstart, we will instantiate a Vertx HTTP Server where the port numb
 
 ```java
  ConfigurationStoreOptions appStore = new ConfigurationStoreOptions();
- appStore.setType("configmap")
-         .setConfig(new JsonObject()
-                 .put("namespace", "vertx-demo")
-                 .put("name", "app-config")); / Name of the ConfigMap to be fetched 
+ appStore.setType("configmap")                  // configuration type: configmap
+     .setConfig(new JsonObject()
+         .put("name", "vertx-rest-configmap")   // name of the config map
+         .put("key", "app.json"));              // key of the config map
 
 ```
 
@@ -17,14 +17,14 @@ using JSon as Dataformat for our application as you can see hereafter :
 
 ```yml
 apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vertx-rest-configmap
 data:
   app.json: |-
     {
-        "template":"From config ==> Hello %s!"
+      "message" : "Hello, %s from Kubernetes ConfigMap !"
     }
-kind: ConfigMap
-metadata:
-  name: app-config
 ```
 
 # Prerequisites
@@ -94,3 +94,18 @@ mvn clean package
     curl http://<HOST_PORT_ADDRESS>/greeting name==Bruno
     ```
 1. Validate that you get the message `Hello, World from Kubernetes ConfigMap !` as call's response from the REST endpoint
+
+# Integration tests
+
+You must be logged in (`oc login ...`) and be in a project to run the integration tests. You must allow the 
+application to read the config map:
+
+```
+oc policy add-role-to-user view -n $(oc project -q) -z default
+```
+
+Then, execute the integration tests with:
+
+```
+mvn clean verify  -Popenshift -Popenshift-it
+```

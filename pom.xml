@@ -28,34 +28,27 @@
   <packaging>jar</packaging>
 
   <name>rest-configmap</name>
-  <description>Vert.x - Rest &amp; Config Map</description>
+  <description>Vert.x - Rest + Config Map</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
-
-    <fabric8.version>2.2.176</fabric8.version>
-    <vertx.version>3.4.0.Beta1</vertx.version>
-    <slf4j.version>1.7.21</slf4j.version>
+    
+    <vertx.version>3.4.0</vertx.version>
 
     <fabric8.maven.plugin.version>3.1.92</fabric8.maven.plugin.version>
     <maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>2.19.1</maven-failsafe-plugin.version>
-    <vertx-maven-plugin.version>1.0.4</vertx-maven-plugin.version>
+    <vertx-maven-plugin.version>1.0.5</vertx-maven-plugin.version>
+    <fabric8.maven.plugin.version>3.2.28</fabric8.maven.plugin.version>
+
 
     <vertx.verticle>org.obsidiantoaster.quickstart.RestApplication</vertx.verticle>
   </properties>
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>io.fabric8</groupId>
-        <artifactId>fabric8-project-bom-with-platform-deps</artifactId>
-        <version>${fabric8.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
       <dependency>
         <groupId>io.vertx</groupId>
         <artifactId>vertx-stack-depchain</artifactId>
@@ -70,26 +63,66 @@
     <!-- Vertx -->
     <dependency>
       <groupId>io.vertx</groupId>
+      <artifactId>vertx-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
       <artifactId>vertx-web</artifactId>
     </dependency>
-
-    <!-- Logging -->
     <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>${slf4j.version}</version>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-web-client</artifactId>
     </dependency>
 
     <!-- Vertx Configuration Service -->
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-config</artifactId>
-      <version>${vertx.version}</version>
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-config-kubernetes-configmap</artifactId>
-      <version>${vertx.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.22</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-unit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.6.1</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.jayway.restassured</groupId>
+      <artifactId>rest-assured</artifactId>
+      <version>2.9.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>openshift-client</artifactId>
+      <version>1.4.34</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.jayway.awaitility</groupId>
+      <artifactId>awaitility</artifactId>
+      <version>1.7.0</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -98,13 +131,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.6.0</version>
+        <version>3.6.1</version>
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
         </configuration>
       </plugin>
-      <!-- vert.x maven plugin to generate the fat-jar -->
       <plugin>
         <groupId>io.fabric8</groupId>
         <artifactId>vertx-maven-plugin</artifactId>
@@ -143,22 +175,6 @@
                 </goals>
               </execution>
             </executions>
-            <configuration>
-              <generator>
-                <config>
-                  <java-exec>
-                    <mainClass>io.vertx.core.Launcher</mainClass>
-                  </java-exec>
-                </config>
-              </generator>
-              <resources>
-                <labels>
-                  <service>
-                    <expose>true</expose>
-                  </service>
-                </labels>
-              </resources>
-            </configuration>
           </plugin>
         </plugins>
       </build>
