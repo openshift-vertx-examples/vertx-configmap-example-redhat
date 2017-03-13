@@ -1,3 +1,2 @@
 name: Vert.x - Rest & Config Map
-description: Simple REST endpoint where the Vert.x container uses kubernetes ConfigMap to get the Application
-parameters.
+description: Simple REST endpoint where the Vert.x container uses kubernetes ConfigMap to get the Application parameters.
