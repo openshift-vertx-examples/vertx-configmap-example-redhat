@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
- * @author <a href="http://escoffier.me">Clement Escoffier</a>
+ * Check the behavior of the application when running in OpenShift.
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class OpenShiftIT {

@@ -25,6 +25,12 @@ import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 
 import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
 
@@ -38,6 +44,8 @@ public class RestApplication extends AbstractVerticle {
     private ConfigRetriever conf;
     private String message;
     private long counter;
+
+    private static final Logger LOGGER = LogManager.getLogger(RestApplication.class);
 
     @Override
     public void start() {
@@ -61,9 +69,21 @@ public class RestApplication extends AbstractVerticle {
             });
 
         conf.listen(change -> {
-            System.out.println("New configuration retrieved: " + change.getNewConfiguration().getString("message"));
+            LOGGER.info("New configuration retrieved: {} message",
+                change.getNewConfiguration().getString("message"));
             message = change.getNewConfiguration().getString("message", DEFAULT_TEMPLATE);
+            String level = change.getNewConfiguration().getString("level", "INFO");
+            LOGGER.info("New log level: {}", level);
+            setLogLevel(level);
         });
+    }
+
+    private void setLogLevel(String level) {
+        LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
+        Configuration config = ctx.getConfiguration();
+        LoggerConfig loggerConfig = config.getLoggerConfig(LogManager.ROOT_LOGGER_NAME);
+        loggerConfig.setLevel(Level.getLevel(level));
+        ctx.updateLoggers();
     }
 
     private void greeting(RoutingContext context) {
@@ -71,6 +91,7 @@ public class RestApplication extends AbstractVerticle {
         if (name == null) {
             name = "World";
         }
+        LOGGER.debug("Replying to request, parameter={}", name);
         context.response()
             .putHeader(CONTENT_TYPE, "application/json; charset=utf-8")
             .end(Json.encode(new Greeting(++counter, String.format(message, name))));

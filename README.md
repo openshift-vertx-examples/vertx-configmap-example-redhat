@@ -95,6 +95,36 @@ mvn clean package
     ```
 1. Validate that you get the message `Hello, World from Kubernetes ConfigMap !` as call's response from the REST endpoint
 
+# Updating the configuration map
+
+You can update the config map at runtime. The application reloads the content and apply the new configuration.
+
+Edit `src/main/fabric8/configmap.yml` to match:
+
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vertx-rest-configmap
+data:
+  app.json: |-
+    {
+      "message" : "Bonjour, %s from Kubernetes ConfigMap !",
+      "level" : "DEBUG"
+    }
+```
+
+It updates the message printed when calling the HTTP endpoint, and also the log level (defaulting to `SEVERE`).
+
+Then execute:
+
+```
+oc apply -f src/main/fabric8/configmap.yml
+```
+
+The application will apply the new configuration automatically. Invoke the HTTP endpoint and check the pod log to see
+ the effects.
+
 # Integration tests
 
 You must be logged in (`oc login ...`) and be in a project to run the integration tests. You must allow the 
