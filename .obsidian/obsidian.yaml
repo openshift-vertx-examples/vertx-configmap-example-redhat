@@ -1,2 +1,2 @@
-name: Vert.x - Rest & Config Map
-description: Simple REST endpoint where the Vert.x container uses kubernetes ConfigMap to get the Application parameters.
+name: Vert.x - HTTP & Config Map
+description: Simple HTTP endpoint where the Vert.x application uses OpenShift ConfigMap to get the application parameters.
