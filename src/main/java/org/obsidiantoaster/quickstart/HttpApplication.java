@@ -21,10 +21,10 @@ import io.vertx.config.ConfigRetrieverOptions;
 import io.vertx.config.ConfigStoreOptions;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.StaticHandler;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,22 +37,22 @@ import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
 /**
  *
  */
-public class RestApplication extends AbstractVerticle {
+public class HttpApplication extends AbstractVerticle {
 
     public static final String DEFAULT_TEMPLATE = "Hello, %s!";
 
     private ConfigRetriever conf;
     private String message;
-    private long counter;
 
-    private static final Logger LOGGER = LogManager.getLogger(RestApplication.class);
+    private static final Logger LOGGER = LogManager.getLogger(HttpApplication.class);
 
     @Override
     public void start() {
         setUpConfiguration();
 
         Router router = Router.router(vertx);
-        router.get("/greeting").handler(this::greeting);
+        router.get("/api/greeting").handler(this::greeting);
+        router.get("/").handler(StaticHandler.create());
 
         retrieveMessageTemplateFromConfiguration()
             .setHandler(ar -> {
@@ -86,15 +86,19 @@ public class RestApplication extends AbstractVerticle {
         ctx.updateLoggers();
     }
 
-    private void greeting(RoutingContext context) {
-        String name = context.request().getParam("name");
+    private void greeting(RoutingContext rc) {
+        String name = rc.request().getParam("name");
         if (name == null) {
             name = "World";
         }
+
         LOGGER.debug("Replying to request, parameter={}", name);
-        context.response()
+        JsonObject response = new JsonObject()
+            .put("content", String.format(message, name));
+
+        rc.response()
             .putHeader(CONTENT_TYPE, "application/json; charset=utf-8")
-            .end(Json.encode(new Greeting(++counter, String.format(message, name))));
+            .end(response.encodePrettily());
     }
 
     private Future<String> retrieveMessageTemplateFromConfiguration() {
@@ -109,9 +113,10 @@ public class RestApplication extends AbstractVerticle {
     private void setUpConfiguration() {
         ConfigStoreOptions appStore = new ConfigStoreOptions();
         appStore.setType("configmap")
+            .setFormat("yaml")
             .setConfig(new JsonObject()
-                .put("name", "vertx-rest-configmap")
-                .put("key", "app.json"));
+                .put("name", "vertx-http-configmap")
+                .put("key", "conf"));
 
         conf = ConfigRetriever.create(vertx, new ConfigRetrieverOptions()
             .addStore(appStore));

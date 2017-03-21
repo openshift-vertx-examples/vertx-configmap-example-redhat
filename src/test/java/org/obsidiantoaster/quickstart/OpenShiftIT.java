@@ -46,21 +46,21 @@ public class OpenShiftIT {
 
     @Test
     public void testBThatWeServeAsExpected() throws MalformedURLException {
-        get("/greeting").then().body("content", equalTo("Hello, World from Kubernetes ConfigMap !"));
-        get("/greeting?name=vert.x").then().body("content", equalTo("Hello, vert.x from Kubernetes ConfigMap !"));
+        get("/api/greeting").then().body("content", equalTo("Hello, World from Kubernetes ConfigMap !"));
+        get("/api/greeting?name=vert.x").then().body("content", equalTo("Hello, vert.x from Kubernetes ConfigMap !"));
     }
 
     @Test
     public void testCThatWeCanReloadTheConfiguration() {
-        ConfigMap map = assistant.client().configMaps().withName("vertx-rest-configmap").get();
+        ConfigMap map = assistant.client().configMaps().withName("vertx-http-configmap").get();
         assertThat(map).isNotNull();
 
-        assistant.client().configMaps().withName("vertx-rest-configmap").edit()
-            .addToData("app.json", new JsonObject().put("message", "Bonjour, %s from Kubernetes ConfigMap !").encode())
+        assistant.client().configMaps().withName("vertx-http-configmap").edit()
+            .addToData("conf", "message : \"Bonjour, %s from Kubernetes ConfigMap !\"")
             .done();
 
         await().atMost(5, TimeUnit.MINUTES).catchUncaughtExceptions().until(() -> {
-            Response response = get("/greeting");
+            Response response = get("/api/greeting");
             return response.getStatusCode() < 500 && response.asString().contains("Bonjour");
         });
     }
