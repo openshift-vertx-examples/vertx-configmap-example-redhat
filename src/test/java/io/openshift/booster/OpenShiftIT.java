@@ -1,8 +1,7 @@
-package org.obsidiantoaster.quickstart;
+package io.openshift.booster;
 
 import com.jayway.restassured.response.Response;
 import io.fabric8.kubernetes.api.model.ConfigMap;
-import io.vertx.core.json.JsonObject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
