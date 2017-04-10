@@ -1,4 +1,4 @@
-node("maven") {
+node("launchpad-maven") {
   checkout scm
   stage("Prepare") {
     sh "oc policy add-role-to-user view -z default"
