@@ -29,7 +29,6 @@ public class OpenShiftIT {
     public static void prepare() throws Exception {
         assistant.deployApplication();
     }
-
     @AfterClass
     public static void cleanup() {
         assistant.cleanup();
@@ -64,5 +63,16 @@ public class OpenShiftIT {
             return response.getStatusCode() < 500 && response.asString().contains("Bonjour");
         });
     }
+
+    @Test
+    public void testDThatWeServeErrorWithoutConfigMap() {
+        get("/api/greeting").then().statusCode(200);
+        assistant.client().configMaps().withName("vertx-http-configmap").delete();
+
+        await().atMost(5, TimeUnit.MINUTES).catchUncaughtExceptions().until(() ->
+                get("/api/greeting").then().statusCode(500)
+        );
+    }
+
 
 }
