@@ -4,5 +4,5 @@ metadata:
   name: vertx-http-configmap
 data:
   conf: |-
-    message : "Hello, %s from Kubernetes ConfigMap !"
+    message : "Hello, %s from a ConfigMap !"
     level : INFO

@@ -32,7 +32,11 @@ public class OpenShiftIT {
 
     @AfterClass
     public static void cleanup() {
-        assistant.cleanup();
+        try {
+            assistant.cleanup();
+        } catch (Exception e) {
+            // Ignore it.
+        }
     }
 
     @Test
@@ -46,8 +50,8 @@ public class OpenShiftIT {
 
     @Test
     public void testBThatWeServeAsExpected() throws MalformedURLException {
-        get("/api/greeting").then().body("content", equalTo("Hello, World from Kubernetes ConfigMap !"));
-        get("/api/greeting?name=vert.x").then().body("content", equalTo("Hello, vert.x from Kubernetes ConfigMap !"));
+        get("/api/greeting").then().body("content", equalTo("Hello, World from a ConfigMap !"));
+        get("/api/greeting?name=vert.x").then().body("content", equalTo("Hello, vert.x from a ConfigMap !"));
     }
 
     @Test
@@ -56,7 +60,7 @@ public class OpenShiftIT {
         assertThat(map).isNotNull();
 
         assistant.client().configMaps().withName("vertx-http-configmap").edit()
-            .addToData("conf", "message : \"Bonjour, %s from Kubernetes ConfigMap !\"")
+            .addToData("conf", "message : \"Bonjour, %s from a ConfigMap !\"")
             .done();
 
         await().atMost(5, TimeUnit.MINUTES).catchUncaughtExceptions().until(() -> {

@@ -22,9 +22,7 @@ import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
  *
  */
 public class HttpApplication extends AbstractVerticle {
-
-    public static final String DEFAULT_TEMPLATE = "Hello, %s!";
-
+    
     private ConfigRetriever conf;
     private String message;
 
@@ -56,7 +54,7 @@ public class HttpApplication extends AbstractVerticle {
         conf.listen(change -> {
             LOGGER.info("New configuration retrieved: {} message",
                 change.getNewConfiguration().getString("message"));
-            message = change.getNewConfiguration().getString("message", DEFAULT_TEMPLATE);
+            message = change.getNewConfiguration().getString("message");
             String level = change.getNewConfiguration().getString("level", "INFO");
             LOGGER.info("New log level: {}", level);
             setLogLevel(level);
@@ -72,6 +70,11 @@ public class HttpApplication extends AbstractVerticle {
     }
 
     private void greeting(RoutingContext rc) {
+        if (message == null) {
+            rc.response().setStatusCode(500)
+                .putHeader(CONTENT_TYPE, "application/json; charset=utf-8")
+                .end(new JsonObject().put("content", "no config map").encode());
+        }
         String name = rc.request().getParam("name");
         if (name == null) {
             name = "World";
@@ -90,8 +93,8 @@ public class HttpApplication extends AbstractVerticle {
         Future<String> future = Future.future();
         conf.getConfig(ar ->
             future.handle(ar
-                .map(json -> json.getString("message", DEFAULT_TEMPLATE))
-                .otherwise(t -> DEFAULT_TEMPLATE)));
+                .map(json -> json.getString("message"))
+                .otherwise(t -> null)));
         return future;
     }
 
