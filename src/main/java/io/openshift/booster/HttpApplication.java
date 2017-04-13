@@ -22,11 +22,12 @@ import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
  *
  */
 public class HttpApplication extends AbstractVerticle {
-    
+
     private ConfigRetriever conf;
     private String message;
 
     private static final Logger LOGGER = LogManager.getLogger(HttpApplication.class);
+    private JsonObject config;
 
     @Override
     public void start() {
@@ -51,13 +52,24 @@ public class HttpApplication extends AbstractVerticle {
 
             });
 
-        conf.listen(change -> {
-            LOGGER.info("New configuration retrieved: {} message",
-                change.getNewConfiguration().getString("message"));
-            message = change.getNewConfiguration().getString("message");
-            String level = change.getNewConfiguration().getString("level", "INFO");
-            LOGGER.info("New log level: {}", level);
-            setLogLevel(level);
+        // It should use the retrieve.listen method, however it does not catch the deletion of the config map.
+        // https://github.com/vert-x3/vertx-config/issues/7
+        vertx.setPeriodic(2000, l -> {
+            conf.getConfig(ar -> {
+                if (ar.succeeded()) {
+                    if (config == null || !config.encode().equals(ar.result().encode())) {
+                        config = ar.result();
+                        LOGGER.info("New configuration retrieved: {}",
+                            ar.result().getString("message"));
+                        message = ar.result().getString("message");
+                        String level = ar.result().getString("level", "INFO");
+                        LOGGER.info("New log level: {}", level);
+                        setLogLevel(level);
+                    }
+                } else {
+                    message = null;
+                }
+            });
         });
     }
 
@@ -74,6 +86,7 @@ public class HttpApplication extends AbstractVerticle {
             rc.response().setStatusCode(500)
                 .putHeader(CONTENT_TYPE, "application/json; charset=utf-8")
                 .end(new JsonObject().put("content", "no config map").encode());
+            return;
         }
         String name = rc.request().getParam("name");
         if (name == null) {
