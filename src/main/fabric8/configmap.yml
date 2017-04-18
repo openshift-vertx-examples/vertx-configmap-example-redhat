@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: vertx-http-configmap
-data:
-  conf: |-
-    message : "Hello, %s from a ConfigMap !"
-    level : INFO

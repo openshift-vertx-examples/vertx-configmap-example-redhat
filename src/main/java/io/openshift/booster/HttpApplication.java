@@ -116,8 +116,8 @@ public class HttpApplication extends AbstractVerticle {
         appStore.setType("configmap")
             .setFormat("yaml")
             .setConfig(new JsonObject()
-                .put("name", "vertx-http-configmap")
-                .put("key", "conf"));
+                .put("name", "app-config")
+                .put("key", "app-config.yml"));
 
         conf = ConfigRetriever.create(vertx, new ConfigRetrieverOptions()
             .addStore(appStore));

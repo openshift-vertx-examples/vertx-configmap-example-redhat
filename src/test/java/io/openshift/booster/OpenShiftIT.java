@@ -9,6 +9,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.util.concurrent.TimeUnit;
 
@@ -28,6 +29,8 @@ public class OpenShiftIT {
     @BeforeClass
     public static void prepare() throws Exception {
         assistant.deployApplication();
+        assistant.deploy("app-config", new File("target/test-classes/test-config.yml"));
+
     }
     @AfterClass
     public static void cleanup() {
@@ -55,11 +58,11 @@ public class OpenShiftIT {
 
     @Test
     public void testCThatWeCanReloadTheConfiguration() {
-        ConfigMap map = assistant.client().configMaps().withName("vertx-http-configmap").get();
+        ConfigMap map = assistant.client().configMaps().withName("app-config").get();
         assertThat(map).isNotNull();
 
-        assistant.client().configMaps().withName("vertx-http-configmap").edit()
-            .addToData("conf", "message : \"Bonjour, %s from a ConfigMap !\"")
+        assistant.client().configMaps().withName("app-config").edit()
+            .addToData("app-config.yml", "message : \"Bonjour, %s from a ConfigMap !\"")
             .done();
 
         await().atMost(5, TimeUnit.MINUTES).catchUncaughtExceptions().until(() -> {
@@ -71,7 +74,7 @@ public class OpenShiftIT {
     @Test
     public void testDThatWeServeErrorWithoutConfigMap() {
         get("/api/greeting").then().statusCode(200);
-        assistant.client().configMaps().withName("vertx-http-configmap").delete();
+        assistant.client().configMaps().withName("app-config").delete();
 
         await().atMost(5, TimeUnit.MINUTES).catchUncaughtExceptions().until(() ->
                 get("/api/greeting").then().statusCode(500)
