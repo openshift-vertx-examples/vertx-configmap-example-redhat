@@ -1,1 +1,1 @@
-http://appdev.openshift.io/mission-configmap-vertx.html
+http://appdev.openshift.io/docs/mission-configmap-vertx.html
