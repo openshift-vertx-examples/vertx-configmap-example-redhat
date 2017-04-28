@@ -16,7 +16,7 @@
   <description>Vert.x - HTTP endpoint + Config Map</description>
 
   <properties>
-    <vertx.version>3.4.1</vertx.version>
+    <vertx.version>3.4.2-SNAPSHOT</vertx.version>
     <vertx-maven-plugin.version>1.0.6</vertx-maven-plugin.version>
     <vertx.verticle>io.openshift.booster.HttpApplication</vertx.verticle>
   </properties>
