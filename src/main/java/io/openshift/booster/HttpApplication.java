@@ -16,8 +16,6 @@ import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.LoggerConfig;
 import rx.Single;
 
-import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
-
 /**
  *
  */
@@ -27,7 +25,6 @@ public class HttpApplication extends AbstractVerticle {
     private String message;
 
     private static final Logger LOGGER = LogManager.getLogger(HttpApplication.class);
-    private JsonObject config;
 
     @Override
     public void start() {
