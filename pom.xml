@@ -5,7 +5,7 @@
   <parent>
     <groupId>io.openshift</groupId>
     <artifactId>booster-parent</artifactId>
-    <version>4</version>
+    <version>6</version>
   </parent>
   <groupId>io.openshift.booster</groupId>
   <artifactId>configmap-vertx</artifactId>
@@ -155,10 +155,7 @@
               </execution>
             </executions>
             <configuration>
-              <enricher>
-                <includes>
-                  <include>vertx-health-check</include>
-                </includes>
+              <enricher>                
                 <config>
                   <vertx-health-check>
                     <path>/health</path>
