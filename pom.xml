@@ -16,7 +16,7 @@
   <description>Vert.x - HTTP endpoint + Config Map</description>
 
   <properties>
-    <vertx.version>3.4.2</vertx.version>
+    <vertx.version>3.4.2.redhat-4</vertx.version>
     <vertx-maven-plugin.version>1.0.9</vertx-maven-plugin.version>
     <vertx.verticle>io.openshift.booster.HttpApplication</vertx.verticle>
   </properties>
@@ -186,22 +186,6 @@
           </plugin>
         </plugins>
       </build>
-    </profile>
-
-    <profile>
-      <id>redhat</id>
-      <properties>
-        <vertx.version>3.4.2.redhat-3</vertx.version>
-      </properties>
-
-      <dependencies>
-        <!-- do not use the kubernetes client transitively resolved from the vert.x modules -->
-        <dependency>
-          <groupId>io.fabric8</groupId>
-          <artifactId>kubernetes-client</artifactId>
-          <version>1.4.35</version>
-        </dependency>
-      </dependencies>
     </profile>
   </profiles>
 </project>
