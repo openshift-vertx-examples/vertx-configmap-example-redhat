@@ -1,6 +1,6 @@
 name: Vert.x - HTTP & Config Map
 description: Simple HTTP endpoint where the Vert.x application uses OpenShift ConfigMap to get the application parameters.
   - id: community
-    name: Eclipse Vert.x 3.4.2.Final (Community)
+    name: 3.4.2.Final (Community)
   - id: redhat
-    name: Vert.x 3.4.2.redhat-4 (RHOAR)
+    name: 3.4.2.redhat-4 (RHOAR)
