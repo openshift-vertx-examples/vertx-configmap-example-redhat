@@ -50,7 +50,7 @@ objects:
     output:
       to:
         kind: ImageStreamTag
-        name: configmap-vertx:1
+        name: configmap-vertx:latest
     postCommit: {}
     resources: {}
     source:
@@ -95,7 +95,7 @@ objects:
       expose: "true"
       app: configmap-vertx
       provider: fabric8
-      version: "1"
+      version: 2-SNAPSHOT
       group: io.openshift.booster
     name: configmap-vertx
   spec:
@@ -112,7 +112,7 @@ objects:
   kind: DeploymentConfig
   metadata:
     annotations:
-      fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=configmap-vertx&var-version=1
+      fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=configmap-vertx&var-version=2-SNAPSHOT
       fabric8.io/scm-con-url: scm:git:https://github.com/openshiftio/booster-parent.git/configmap-vertx
       fabric8.io/scm-url: https://github.com/openshiftio/configmap-vertx
       fabric8.io/iconUrl: img/icons/vertx.svg
@@ -122,7 +122,7 @@ objects:
     labels:
       app: configmap-vertx
       provider: fabric8
-      version: "1"
+      version: 2-SNAPSHOT
       group: io.openshift.booster
     name: configmap-vertx
   spec:
@@ -139,7 +139,7 @@ objects:
     template:
       metadata:
         annotations:
-          fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=configmap-vertx&var-version=1
+          fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=configmap-vertx&var-version=2-SNAPSHOT
           fabric8.io/scm-con-url: scm:git:https://github.com/openshiftio/booster-parent.git/configmap-vertx
           fabric8.io/scm-url: https://github.com/openshiftio/configmap-vertx
           fabric8.io/iconUrl: img/icons/vertx.svg
@@ -149,7 +149,7 @@ objects:
         labels:
           app: configmap-vertx
           provider: fabric8
-          version: "1"
+          version: 2-SNAPSHOT
           group: io.openshift.booster
       spec:
         containers:
@@ -158,7 +158,7 @@ objects:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
-          image: configmap-vertx:1
+          image: configmap-vertx:latest
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -193,7 +193,7 @@ objects:
         - vertx
         from:
           kind: ImageStreamTag
-          name: configmap-vertx:1
+          name: configmap-vertx:latest
       type: ImageChange
 - apiVersion: v1
   kind: Route
@@ -201,7 +201,7 @@ objects:
     labels:
       app: configmap-vertx
       provider: fabric8
-      version: "1"
+      version: 2-SNAPSHOT
       group: io.openshift.booster
     name: configmap-vertx
   spec:
