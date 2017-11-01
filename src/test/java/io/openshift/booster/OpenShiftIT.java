@@ -3,11 +3,6 @@ package io.openshift.booster;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
 import io.fabric8.kubernetes.api.model.ConfigMap;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.fabric8.kubernetes.api.model.ObjectReference;
-import io.fabric8.kubernetes.api.model.ObjectReferenceBuilder;
-import io.fabric8.openshift.api.model.Role;
-import io.fabric8.openshift.api.model.RoleBinding;
 import io.fabric8.openshift.client.*;
 import org.arquillian.cube.openshift.impl.enricher.RouteURL;
 import org.jboss.arquillian.junit.Arquillian;
@@ -18,7 +13,6 @@ import org.junit.runners.MethodSorters;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import static com.jayway.awaitility.Awaitility.await;
@@ -44,34 +38,6 @@ public class OpenShiftIT {
     @Before
     public void setup() {
         RestAssured.baseURI = route.toString();
-//
-//        System.out.println("\nTrying to add a new role binding...");
-//
-//        if (oc.roleBindings().inNamespace(oc.getNamespace()).withName("view").get() == null) {
-//            RoleBinding rb = oc.roleBindings()
-//                .inNamespace(oc.getNamespace())
-//                .createNew()
-//                .withNewMetadata()
-//                .withName("view")
-//                .endMetadata()
-//                .withNewRoleRef()
-//                .withName("view")
-//                .endRoleRef()
-//                .done();
-//
-//            addSubjectToRoleBinding(rb, "ServiceAccount", "default", oc.getNamespace());
-//            addUserNameToRoleBinding(rb, String.format("system:serviceaccount:%s:default", oc.getNamespace()));
-//            oc.roleBindings().replace(rb);
-//            System.out.println("\nBinding is:\n" + rb.toString());
-//        } else {
-//            RoleBinding binding = oc.roleBindings()
-//                .withName("view")
-//                .get();
-//            addSubjectToRoleBinding(binding, "ServiceAccount", "default", oc.getNamespace());
-//            addUserNameToRoleBinding(binding, String.format("system:serviceaccount:%s:default", oc.getNamespace()));
-//            oc.roleBindings().replace(binding);
-//            System.out.println("\nBinding replaced:\n" + binding.toString());
-//        }
     }
 
     @Test
@@ -113,22 +79,5 @@ public class OpenShiftIT {
         await().atMost(5, TimeUnit.MINUTES).catchUncaughtExceptions().until(() ->
             get("/api/greeting").then().statusCode(500)
         );
-    }
-
-    private void addSubjectToRoleBinding(RoleBinding roleBinding, String entityKind, String entityName, String namespace) {
-        ObjectReference subject = new ObjectReferenceBuilder().withKind(entityKind).withName(entityName).withNamespace(namespace).build();
-
-        if(roleBinding.getSubjects().stream().noneMatch(x -> x.getName().equals(subject.getName()) && x.getKind().equals(subject.getKind()))) {
-            roleBinding.getSubjects().add(subject);
-        }
-    }
-
-    private void addUserNameToRoleBinding(RoleBinding roleBinding, String userName) {
-        if( roleBinding.getUserNames() == null) {
-            roleBinding.setUserNames(new ArrayList<>());
-        }
-        if( !roleBinding.getUserNames().contains(userName)) {
-            roleBinding.getUserNames().add(userName);
-        }
     }
 }
