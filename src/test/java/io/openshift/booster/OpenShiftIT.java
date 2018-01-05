@@ -1,7 +1,7 @@
 package io.openshift.booster;
 
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.response.Response;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.openshift.client.*;
 import org.arquillian.cube.openshift.impl.enricher.AwaitRoute;
@@ -16,8 +16,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
-import static com.jayway.awaitility.Awaitility.await;
-import static com.jayway.restassured.RestAssured.get;
+import static org.awaitility.Awaitility.await;
+import static io.restassured.RestAssured.get;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 
@@ -76,7 +76,7 @@ public class OpenShiftIT {
         get("/api/greeting").then().statusCode(200);
         oc.configMaps().withName("app-config").delete();
 
-        await().atMost(5, TimeUnit.MINUTES).catchUncaughtExceptions().until(() ->
+        await().atMost(5, TimeUnit.MINUTES).catchUncaughtExceptions().untilAsserted(() ->
             get("/api/greeting").then().statusCode(500)
         );
     }
