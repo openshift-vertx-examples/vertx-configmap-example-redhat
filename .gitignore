@@ -6,3 +6,5 @@ target
 .vertx
 *.log
 pom.xml.versionsBackup
+.idea
+*.iml

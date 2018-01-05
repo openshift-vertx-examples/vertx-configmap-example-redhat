@@ -4,6 +4,7 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.openshift.client.*;
+import org.arquillian.cube.openshift.impl.enricher.AwaitRoute;
 import org.arquillian.cube.openshift.impl.enricher.RouteURL;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
@@ -27,9 +28,8 @@ import static org.hamcrest.core.IsEqual.equalTo;
 @RunWith(Arquillian.class)
 public class OpenShiftIT {
 
-    private final String applicationName = "configmap-vertx";
-
-    @RouteURL(applicationName)
+    @RouteURL("${app.name}")
+    @AwaitRoute
     private URL route;
 
     @ArquillianResource
