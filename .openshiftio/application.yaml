@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: launchpad-builder
+  name: launcher-builder
   annotations:
     description: This template creates a Build Configuration using an S2I builder.
     tags: instant-app
@@ -31,11 +31,15 @@ objects:
   kind: ImageStream
   metadata:
     name: configmap-vertx
+    labels:
+      booster: configmap-vertx
   spec: {}
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: runtime
+    name: runtime-configmap-vertx
+    labels:
+      booster: configmap-vertx
   spec:
     tags:
     - name: latest
@@ -46,6 +50,8 @@ objects:
   kind: BuildConfig
   metadata:
     name: configmap-vertx
+    labels:
+      booster: configmap-vertx
   spec:
     output:
       to:
@@ -63,7 +69,7 @@ objects:
       sourceStrategy:
         from:
           kind: ImageStreamTag
-          name: runtime:latest
+          name: runtime-configmap-vertx:latest
         incremental: true
         env:
         - name: MAVEN_ARGS_APPEND
@@ -91,7 +97,7 @@ objects:
       fabric8.io/git-branch: master
       prometheus.io/scrape: "true"
       fabric8.io/scm-devcon-url: scm:git:git:@github.com:openshiftio/booster-parent.git/configmap-vertx
-      fabric8.io/scm-tag: booster-parent-13
+      fabric8.io/scm-tag: booster-parent-15
     labels:
       expose: "true"
       app: configmap-vertx
@@ -119,7 +125,7 @@ objects:
       fabric8.io/iconUrl: img/icons/vertx.svg
       fabric8.io/git-branch: master
       fabric8.io/scm-devcon-url: scm:git:git:@github.com:openshiftio/booster-parent.git/configmap-vertx
-      fabric8.io/scm-tag: booster-parent-13
+      fabric8.io/scm-tag: booster-parent-15
     labels:
       app: configmap-vertx
       provider: fabric8
@@ -146,7 +152,7 @@ objects:
           fabric8.io/iconUrl: img/icons/vertx.svg
           fabric8.io/git-branch: master
           fabric8.io/scm-devcon-url: scm:git:git:@github.com:openshiftio/booster-parent.git/configmap-vertx
-          fabric8.io/scm-tag: booster-parent-13
+          fabric8.io/scm-tag: booster-parent-15
         labels:
           app: configmap-vertx
           provider: fabric8
