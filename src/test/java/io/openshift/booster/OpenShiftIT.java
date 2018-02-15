@@ -1,7 +1,7 @@
 package io.openshift.booster;
 
-import io.fabric8.kubernetes.api.model.v3_1.ConfigMap;
-import io.fabric8.openshift.clnt.v3_1.OpenShiftClient;
+import io.fabric8.kubernetes.api.model.ConfigMap;
+import io.fabric8.openshift.client.OpenShiftClient;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.arquillian.cube.openshift.impl.enricher.AwaitRoute;
