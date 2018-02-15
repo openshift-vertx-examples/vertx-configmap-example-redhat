@@ -1,14 +1,16 @@
 package io.openshift.booster;
 
+import io.fabric8.kubernetes.api.model.v3_1.ConfigMap;
+import io.fabric8.openshift.clnt.v3_1.OpenShiftClient;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
-import io.fabric8.kubernetes.api.model.ConfigMap;
-import io.fabric8.openshift.client.*;
 import org.arquillian.cube.openshift.impl.enricher.AwaitRoute;
 import org.arquillian.cube.openshift.impl.enricher.RouteURL;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
@@ -16,9 +18,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
-import static org.awaitility.Awaitility.await;
 import static io.restassured.RestAssured.get;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
