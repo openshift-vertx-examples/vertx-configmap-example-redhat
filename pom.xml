@@ -96,12 +96,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>io.fabric8</groupId>
-      <artifactId>openshift-client</artifactId>
-      <version>1.4.34</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>io.rest-assured</groupId>
       <artifactId>rest-assured</artifactId>
       <version>3.0.6</version>
@@ -131,6 +125,12 @@
           <groupId>io.undertow</groupId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>openshift-client</artifactId>
+      <version>1.4.34</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
