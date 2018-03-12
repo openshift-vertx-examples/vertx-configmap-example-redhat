@@ -97,12 +97,12 @@ objects:
       fabric8.io/git-branch: master
       prometheus.io/scrape: "true"
       fabric8.io/scm-devcon-url: scm:git:git:@github.com:openshiftio/booster-parent.git/configmap-vertx
-      fabric8.io/scm-tag: booster-parent-19
+      fabric8.io/scm-tag: booster-parent-20
     labels:
       expose: "true"
       app: configmap-vertx
       provider: fabric8
-      version: 10-SNAPSHOT
+      version: "10"
       group: io.openshift.booster
     name: configmap-vertx
   spec:
@@ -119,17 +119,17 @@ objects:
   kind: DeploymentConfig
   metadata:
     annotations:
-      fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=configmap-vertx&var-version=10-SNAPSHOT
+      fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=configmap-vertx&var-version=10
       fabric8.io/scm-con-url: scm:git:https://github.com/openshiftio/booster-parent.git/configmap-vertx
       fabric8.io/scm-url: https://github.com/openshiftio/configmap-vertx
       fabric8.io/iconUrl: img/icons/vertx.svg
       fabric8.io/git-branch: master
       fabric8.io/scm-devcon-url: scm:git:git:@github.com:openshiftio/booster-parent.git/configmap-vertx
-      fabric8.io/scm-tag: booster-parent-19
+      fabric8.io/scm-tag: booster-parent-20
     labels:
       app: configmap-vertx
       provider: fabric8
-      version: 10-SNAPSHOT
+      version: "10"
       group: io.openshift.booster
     name: configmap-vertx
   spec:
@@ -146,17 +146,17 @@ objects:
     template:
       metadata:
         annotations:
-          fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=configmap-vertx&var-version=10-SNAPSHOT
+          fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=configmap-vertx&var-version=10
           fabric8.io/scm-con-url: scm:git:https://github.com/openshiftio/booster-parent.git/configmap-vertx
           fabric8.io/scm-url: https://github.com/openshiftio/configmap-vertx
           fabric8.io/iconUrl: img/icons/vertx.svg
           fabric8.io/git-branch: master
           fabric8.io/scm-devcon-url: scm:git:git:@github.com:openshiftio/booster-parent.git/configmap-vertx
-          fabric8.io/scm-tag: booster-parent-19
+          fabric8.io/scm-tag: booster-parent-20
         labels:
           app: configmap-vertx
           provider: fabric8
-          version: 10-SNAPSHOT
+          version: "10"
           group: io.openshift.booster
       spec:
         containers:
@@ -200,7 +200,7 @@ objects:
     labels:
       app: configmap-vertx
       provider: fabric8
-      version: 10-SNAPSHOT
+      version: "10"
       group: io.openshift.booster
     name: configmap-vertx
   spec:
