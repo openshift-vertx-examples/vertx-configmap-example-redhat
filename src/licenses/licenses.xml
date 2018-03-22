@@ -484,21 +484,6 @@
         </dependency>
         <dependency>
             <groupId>io.vertx</groupId>
-            <artifactId>vertx-config-kubernetes-configmap</artifactId>
-            <version>3.4.2.redhat-009</version>
-            <licenses>
-                <license>
-                    <name>Apache License 2.0</name>
-                    <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-                </license>
-                <license>
-                    <name>Eclipse Public License, Version 1.0</name>
-                    <url>http://repository.jboss.org/licenses/epl-1.0.txt</url>
-                </license>
-            </licenses>
-        </dependency>
-        <dependency>
-            <groupId>io.vertx</groupId>
             <artifactId>vertx-config-yaml</artifactId>
             <version>3.4.2.redhat-009</version>
             <licenses>
@@ -1647,7 +1632,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jul-to-slf4j</artifactId>
-            <version>1.7.21.redhat-2</version>
+            <version>1.7.13</version>
             <licenses>
                 <license>
                     <name>MIT License</name>
