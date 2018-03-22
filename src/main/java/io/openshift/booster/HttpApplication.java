@@ -112,14 +112,16 @@ public class HttpApplication extends AbstractVerticle {
     }
 
     private void setUpConfiguration() {
-        ConfigStoreOptions appStore = new ConfigStoreOptions();
-        appStore.setType("configmap")
-            .setFormat("yaml")
-            .setConfig(new JsonObject()
-                .put("name", "app-config")
-                .put("key", "app-config.yml"));
-
-        conf = ConfigRetriever.create(vertx, new ConfigRetrieverOptions()
-            .addStore(appStore));
+        String path = System.getenv("VERTX_CONFIG_PATH");
+        ConfigRetrieverOptions options = new ConfigRetrieverOptions();
+        if (path != null) {
+            ConfigStoreOptions appStore = new ConfigStoreOptions();
+            appStore.setType("file")
+                .setFormat("yaml")
+                .setConfig(new JsonObject()
+                    .put("path", path));
+            options.addStore(appStore);
+        }
+        conf = ConfigRetriever.create(vertx, options);
     }
 }
