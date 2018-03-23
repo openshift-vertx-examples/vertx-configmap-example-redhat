@@ -71,4 +71,14 @@ public class OpenShiftIT {
 
         get("/api/greeting?name=vert.x").then().body("content", equalTo("Bonjour, vert.x from a ConfigMap !"));
     }
+
+    @Test
+    public void testDThatWeServeErrorWithoutConfigMap() {
+        get("/api/greeting").then().statusCode(200);
+        oc.configMaps().withName("app-config").delete();
+
+        await().atMost(5, TimeUnit.MINUTES).catchUncaughtExceptions().untilAsserted(() ->
+            get("/api/greeting").then().statusCode(500)
+        );
+    }
 }

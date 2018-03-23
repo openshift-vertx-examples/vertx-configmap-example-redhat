@@ -6,6 +6,7 @@ spec:
         - configMap:
             # Name of the config map
             name: app-config
+            optional: true
             # Define the items from the config map to mount
             items:
             - key: app-config.yml

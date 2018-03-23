@@ -11,55 +11,65 @@
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <div>
-            <h1>Vert.x HTTP + ConfigMap Booster</h1>
-            <p class="lead">This mission showcases application configuration, using OpenShift <em>configmaps</em>. It demonstrates application and runtime configuration leveraging external configuration sources. Alongside the basic means to set up a <em>configmap</em>                and use with a specific runtime, this booster also demonstrates how changes to the configuration can be applied to services already deployed in OpenShift.
-            </p>
+    <div>
+        <h1>Vert.x HTTP + ConfigMap Booster</h1>
+        <p class="lead">This mission showcases application configuration, using OpenShift <em>configmaps</em>. It demonstrates application and runtime configuration leveraging external configuration sources. Alongside the basic means to set up a <em>configmap</em>                and use with a specific runtime, this booster also demonstrates how changes to the configuration can be applied to services already deployed in OpenShift.
+        </p>
 
-            <h2>Using the greeting service</h2>
+        <h2>Using the greeting service</h2>
 
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" class="form-control" id="name" placeholder="World">
-                </div>
-                <button id="invoke" type="submit" class="btn btn-success">Invoke</button>
-            </form>
+        <form class="form-inline">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" placeholder="World">
+            </div>
+            <button id="invoke" type="submit" class="btn btn-success">Invoke</button>
+        </form>
 
-            <h3>Result:</h3>
-            <pre><code id="greeting-result">Invoke the service to see the result.</code></pre>
+        <h3>Result:</h3>
+        <pre><code id="greeting-result">Invoke the service to see the result.</code></pre>
 
-            <p class="lead">
-                Once you have invoked the <em>greeting</em> service, you can reconfigure it:
-            </p>
-            <ol>
-                <li>Run <code>oc edit configmap app-config</code></li>
-                <li>Change the <code>message</code> entry to <code>Bonjour, %s from Kubernetes ConfigMap !</code></li>
-                <li>Change the <code>level</code> entry to <code>DEBUG</code></li>
-                <li>Save</li>
-            </ol>
-        </div>
+        <p class="lead">
+            If you didn't create the config map yet:
+        </p>
+        <ol>
+            <li>Run <code>oc create configmap app-config --from-file=app-config.yml</code></li>
+            <li>The propagation may take some time depending on your OpenShift Cluster configuration</li>
+        </ol>
+
+        <hr style="border-top: 1px solid #ccc"/>
+
+        <p class="lead">
+            Once you have invoked the <em>greeting</em> service with a config map, you can reconfigure it:
+        </p>
+        <ol>
+            <li>Run <code>oc edit configmap app-config</code></li>
+            <li>Change the <code>message</code> entry to <code>Bonjour, %s from Kubernetes ConfigMap !</code></li>
+            <li>Change the <code>level</code> entry to <code>DEBUG</code></li>
+            <li>Save</li>
+        </ol>
     </div>
+</div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
-    <script>
-        $(document).ready(function() {
-            $("#invoke").click(function(e) {
-                var n = $("#name").val() || "World";
-                $.getJSON("/api/greeting?name=" + n, function(res) {
-                        $("#greeting-result").html(JSON.stringify(res));
-                    })
-                    .fail(function(jqxhr, textStatus, error) {
-                        $("#greeting-result").html("Unable to read the configuration");
-                    });
-                e.preventDefault();
-            });
+<script>
+    $(document).ready(function() {
+        $("#invoke").click(function(e) {
+            var n = $("#name").val() || "World";
+            $.getJSON("/api/greeting?name=" + n, function(res) {
+                $("#greeting-result").html(JSON.stringify(res));
+            })
+                .fail(function(jqxhr, textStatus, error) {
+                    $("#greeting-result").html("Unable to read the configuration");
+                });
+            e.preventDefault();
         });
-    </script>
+    });
+</script>
 
 </body>
 
