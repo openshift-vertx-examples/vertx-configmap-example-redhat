@@ -203,6 +203,7 @@ objects:
             - key: app-config.yml
               path: app-config.yml
             name: app-config
+            optional: true
           name: config
     triggers:
     - type: ConfigChange
