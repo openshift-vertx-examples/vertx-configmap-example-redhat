@@ -1,7 +1,7 @@
 apiVersion: v1
 data:
   app-config.yml: |-
-    message : "Hello, %s from a ConfigMap !"
+    message : "Hello %s from a ConfigMap!"
     level : INFO
 kind: ConfigMap
 metadata:
