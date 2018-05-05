@@ -1,0 +1,3 @@
+# Configuration used with vertx:run for local development.
+message: "Hello %s from the local configuration!"
+level: INFO
