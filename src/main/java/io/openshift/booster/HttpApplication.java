@@ -1,8 +1,6 @@
 package io.openshift.booster;
 
 import io.vertx.config.ConfigRetriever;
-import io.vertx.config.ConfigRetrieverOptions;
-import io.vertx.config.ConfigStoreOptions;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
@@ -31,7 +29,7 @@ public class HttpApplication extends AbstractVerticle {
 
     @Override
     public void start() {
-        setUpConfiguration();
+        conf = ConfigRetriever.create(vertx);
 
         Router router = Router.router(vertx);
         router.get("/api/greeting").handler(this::greeting);
@@ -109,19 +107,5 @@ public class HttpApplication extends AbstractVerticle {
                 .map(json -> json.getString("message"))
                 .otherwise(t -> null)));
         return future;
-    }
-
-    private void setUpConfiguration() {
-        String path = System.getenv("VERTX_CONFIG_PATH");
-        ConfigRetrieverOptions options = new ConfigRetrieverOptions();
-        if (path != null) {
-            ConfigStoreOptions appStore = new ConfigStoreOptions();
-            appStore.setType("file")
-                .setFormat("yaml")
-                .setConfig(new JsonObject()
-                    .put("path", path));
-            options.addStore(appStore);
-        }
-        conf = ConfigRetriever.create(vertx, options);
     }
 }

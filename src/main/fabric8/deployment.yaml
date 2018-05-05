@@ -10,18 +10,13 @@ spec:
             # Define the items from the config map to mount
             items:
             - key: app-config.yml
-              path: app-config.yml
+              path: config.yml
             # Volume name (used as reference below)
           name: config
       containers:
         - env:
-            - name: KUBERNETES_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  apiVersion: v1
-                  fieldPath: metadata.namespace
             - name: VERTX_CONFIG_PATH
-              value: '/deployments/config/app-config.yml'
+              value: '/deployments/conf/config.yml'
           volumeMounts:
             - name: config
-              mountPath: /deployments/config
+              mountPath: /deployments/conf
