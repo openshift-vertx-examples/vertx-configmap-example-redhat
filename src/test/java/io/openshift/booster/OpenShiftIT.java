@@ -51,8 +51,8 @@ public class OpenShiftIT {
 
     @Test
     public void testBThatWeServeAsExpected() {
-        get("/api/greeting").then().body("content", equalTo("Hello, World from a ConfigMap !"));
-        get("/api/greeting?name=vert.x").then().body("content", equalTo("Hello, vert.x from a ConfigMap !"));
+        get("/api/greeting").then().body("content", equalTo("Hello World from a ConfigMap!"));
+        get("/api/greeting?name=vert.x").then().body("content", equalTo("Hello vert.x from a ConfigMap!"));
     }
 
     @Test
