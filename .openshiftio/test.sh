@@ -14,7 +14,7 @@ oc apply -f .openshiftio/resource.configmap.yaml
 oc apply -f .openshiftio/application.yaml
 
 # Create the application
-oc new-app --template=vertx-configmap-booster -p SOURCE_REPOSITORY_URL=https://github.com/openshiftio-vertx-boosters/vertx-configmap-booster
+oc new-app --template=vertx-configmap-booster -p SOURCE_REPOSITORY_URL=https://github.com/openshiftio-vertx-boosters/vertx-configmap-booster-redhat
 
 # wait for pod to be ready
 waitForPodState "configmap-vertx" "Running"
