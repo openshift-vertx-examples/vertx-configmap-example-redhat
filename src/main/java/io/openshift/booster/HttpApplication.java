@@ -42,7 +42,7 @@ public class HttpApplication extends AbstractVerticle {
                 message = ar.result();
                 vertx
                     .createHttpServer()
-                    .requestHandler(router::accept)
+                    .requestHandler(router)
                     .listen(
                         // Retrieve the port from the configuration,
                         // default to 8080.
