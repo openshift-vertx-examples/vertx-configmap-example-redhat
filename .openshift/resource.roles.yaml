@@ -6,7 +6,7 @@ items:
   metadata:
     name: role-view-default
     labels:
-      booster: 
+      example: 
   subjects:
   - kind: ServiceAccount
     name: default

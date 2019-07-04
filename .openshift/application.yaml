@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: vertx-configmap-booster
+  name: vertx-configmap-example
   annotations:
     description: This template creates a Vert.x application using a config map as configuration source.
     tags: instant-app
@@ -33,7 +33,7 @@ objects:
   metadata:
     name: configmap-vertx
     labels:
-      booster: configmap-vertx
+      example: configmap-vertx
   spec: {}
 
 - apiVersion: v1
@@ -41,7 +41,7 @@ objects:
   metadata:
     name: runtime-configmap-vertx
     labels:
-      booster: configmap-vertx
+      example: configmap-vertx
   spec:
     tags:
     - name: latest
@@ -54,7 +54,7 @@ objects:
   metadata:
     name: configmap-vertx
     labels:
-      booster: configmap-vertx
+      example: configmap-vertx
   spec:
     output:
       to:
@@ -94,7 +94,7 @@ objects:
       prometheus.io/scrape: "true"
     labels:
       app: configmap-vertx
-      group: io.openshift.booster
+      group: io.openshift.example
     name: configmap-vertx
   spec:
     ports:
@@ -104,25 +104,25 @@ objects:
       targetPort: 8080
     selector:
       app: configmap-vertx
-      group: io.openshift.booster
+      group: io.openshift.example
 
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
     labels:
       app: configmap-vertx
-      group: io.openshift.booster
+      group: io.openshift.example
     name: configmap-vertx
   spec:
     replicas: 1
     selector:
       app: configmap-vertx
-      group: io.openshift.booster
+      group: io.openshift.example
     template:
       metadata:
         labels:
           app: configmap-vertx
-          group: io.openshift.booster
+          group: io.openshift.example
       spec:
         containers:
         - env:
@@ -186,7 +186,7 @@ objects:
   metadata:
     labels:
       app: configmap-vertx
-      group: io.openshift.booster
+      group: io.openshift.example
     name: configmap-vertx
   spec:
     port:

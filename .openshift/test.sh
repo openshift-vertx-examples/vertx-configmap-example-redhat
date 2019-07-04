@@ -9,12 +9,12 @@ fi
 source .openshift/openshift.sh
 
 if [ -z "$1" ]; then
-  ORG="openshift-vertx-boosters"
+  ORG="openshift-vertx-examples"
 else
   ORG=$1
 fi
 
-REPO="https://github.com/$ORG/vertx-configmap-booster-redhat"
+REPO="https://github.com/$ORG/vertx-configmap-example-redhat"
 echo -e "\n${YELLOW}Using source repository: $REPO ...\n${NC}"
 
 # cleanup
@@ -42,7 +42,7 @@ oc apply -f .openshift/resource.configmap.yaml
 oc apply -f .openshift/application.yaml
 
 # Create the application
-oc new-app --template=vertx-configmap-booster -p SOURCE_REPOSITORY_URL="$REPO"
+oc new-app --template=vertx-configmap-example -p SOURCE_REPOSITORY_URL="$REPO"
 
 # wait for pod to be ready
 waitForPodState "configmap-vertx" "Running"
