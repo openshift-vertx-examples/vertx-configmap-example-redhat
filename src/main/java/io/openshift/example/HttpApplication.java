@@ -1,4 +1,4 @@
-package io.openshift.booster;
+package io.openshift.example;
 
 import io.vertx.config.ConfigRetriever;
 import io.vertx.core.AbstractVerticle;
