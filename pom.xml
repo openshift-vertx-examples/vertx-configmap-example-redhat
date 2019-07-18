@@ -11,7 +11,7 @@
   <description>Vert.x - HTTP endpoint + Config Map</description>
 
   <properties>
-    <vertx.version>3.7.1.redhat-00012</vertx.version>
+    <vertx.version>3.8.0</vertx.version>
     <vertx-maven-plugin.version>1.0.20</vertx-maven-plugin.version>
     <vertx.verticle>io.openshift.example.HttpApplication</vertx.verticle>
 
