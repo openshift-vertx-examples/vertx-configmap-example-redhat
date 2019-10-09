@@ -3,6 +3,7 @@ package io.openshift.example;
 import io.vertx.config.ConfigRetriever;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Future;
+import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -101,7 +102,8 @@ public class HttpApplication extends AbstractVerticle {
     }
 
     private Future<String> retrieveMessageTemplateFromConfiguration() {
-        Future<String> future = Future.future();
+        Promise<String> promise = Promise.promise();
+        Future<String> future = promise.future();
         conf.getConfig(ar ->
             future.handle(ar
                 .map(json -> json.getString("message"))
