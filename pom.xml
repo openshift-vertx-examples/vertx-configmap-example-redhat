@@ -11,7 +11,7 @@
   <description>Vert.x - HTTP endpoint + Config Map</description>
 
   <properties>
-    <vertx.version>3.8.5.redhat-00005</vertx.version>
+    <vertx.version>3.9.0.redhat-00008</vertx.version>
     <vertx-maven-plugin.version>1.0.22</vertx-maven-plugin.version>
     <vertx.verticle>io.openshift.example.HttpApplication</vertx.verticle>
 
@@ -145,6 +145,26 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <version>4.0.0</version>
+        <executions>
+          <execution>
+            <id>get-the-git-infos</id>
+            <goals>
+              <goal>revision</goal>
+            </goals>
+            <phase>initialize</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <includeOnlyProperties>
+            <includeOnlyProperty>^git.remote.origin.url$</includeOnlyProperty>
+          </includeOnlyProperties>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 
@@ -166,17 +186,52 @@
                 <goals>
                   <goal>resource</goal>
                   <goal>build</goal>
+                  <goal>apply</goal>
                 </goals>
               </execution>
             </executions>
             <configuration>
               <enricher>                
                 <config>
-                  <vertx-health-check>
+                  <f8-healthcheck-vertx>
                     <path>/health</path>
-                  </vertx-health-check>
+                  </f8-healthcheck-vertx>
                 </config>
               </enricher>
+              <resources>
+                <labels>
+                  <all>
+                    <property>
+                      <name>app.kubernetes.io/part-of</name>
+                      <value>configmap-example</value>
+                    </property>
+                    <property>
+                      <name>app.kubernetes.io/name</name>
+                      <value>configmap-service</value>
+                    </property>
+                    <property>
+                      <name>app.kubernetes.io/component</name>
+                      <value>frontend</value>
+                    </property>
+                    <property>
+                      <name>app.openshift.io/runtime</name>
+                      <value>vertx</value>
+                    </property>
+                    <property>
+                      <name>app.openshift.io/runtime-version</name>
+                      <value>${vertx.version}</value>
+                    </property>
+                  </all>
+                </labels>
+                <annotations>
+                  <all>
+                    <property>
+                      <name>app.openshift.io/vcs-uri</name>
+                      <value>${git.remote.origin.url}</value>
+                    </property>
+                  </all>
+                </annotations>
+              </resources>
             </configuration>
           </plugin>
         </plugins>
