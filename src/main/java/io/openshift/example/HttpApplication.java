@@ -38,7 +38,7 @@ public class HttpApplication extends AbstractVerticle {
         router.get("/").handler(StaticHandler.create());
 
         retrieveMessageTemplateFromConfiguration()
-            .setHandler(ar -> {
+            .onComplete(ar -> {
                 // Once retrieved, store it and start the HTTP server.
                 message = ar.result();
                 vertx
