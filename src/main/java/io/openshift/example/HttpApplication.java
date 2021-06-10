@@ -105,7 +105,7 @@ public class HttpApplication extends AbstractVerticle {
         Promise<String> promise = Promise.promise();
         Future<String> future = promise.future();
         conf.getConfig(ar ->
-            future.handle(ar
+            promise.handle(ar
                 .map(json -> json.getString("message"))
                 .otherwise(t -> null)));
         return future;
