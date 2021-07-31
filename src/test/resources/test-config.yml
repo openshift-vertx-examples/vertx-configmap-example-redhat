@@ -4,5 +4,5 @@ metadata:
   name: app-config
 data:
   app-config.yml: |-
-      message : "Hello %s from a ConfigMap!"
-      level : INFO
+    message : "Hello %s from a ConfigMap!"
+    level : INFO
