@@ -1,6 +1,7 @@
 package io.openshift.example;
 
 import io.fabric8.kubernetes.api.model.ConfigMap;
+import io.fabric8.kubernetes.api.model.ConfigMapBuilder;
 import io.fabric8.openshift.client.OpenShiftClient;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -60,9 +61,10 @@ public class OpenShiftIT {
         ConfigMap map = oc.configMaps().withName("app-config").get();
         assertThat(map).isNotNull();
 
-        oc.configMaps().withName("app-config").edit()
-            .addToData("app-config.yml", "message : \"Bonjour, %s from a ConfigMap !\"")
-            .done();
+        oc.configMaps().withName("app-config").edit(
+                c -> new ConfigMapBuilder(c).addToData("app-config.yml", "message : \"Bonjour, %s from a ConfigMap !\"")
+                        .build()
+        );
 
         await().atMost(5, TimeUnit.MINUTES).catchUncaughtExceptions().until(() -> {
             Response response = get("/api/greeting");

@@ -7,7 +7,7 @@ node("launchpad-maven") {
     sh "if ! oc get configmap app-config -o yaml | grep app-config.yml; then oc create configmap app-config --from-file=app-config.yml; fi"
   }
   stage("Build") {
-    sh "mvn fabric8:deploy -Popenshift -DskipTests"
+    sh "mvn oc:deploy -Popenshift -DskipTests"
   }
   stage("Deploy")
 }
