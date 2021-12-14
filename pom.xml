@@ -12,7 +12,7 @@
 
   <properties>
     <vertx.version>4.1.0.redhat-00004</vertx.version>
-    <vertx-maven-plugin.version>1.0.24</vertx-maven-plugin.version>
+    <vertx-maven-plugin.version>1.0.26</vertx-maven-plugin.version>
     <vertx.verticle>io.openshift.example.HttpApplication</vertx.verticle>
 
     <maven.compiler.source>1.8</maven.compiler.source>
