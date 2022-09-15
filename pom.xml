@@ -19,7 +19,7 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-    <jkube.version>1.4.0</jkube.version>
+    <jkube.version>1.9.1</jkube.version>
     <arquillian-cube.version>1.18.2</arquillian-cube.version>
 
     <jkube.generator.from>registry.access.redhat.com/ubi8/openjdk-11</jkube.generator.from>
